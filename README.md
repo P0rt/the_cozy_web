@@ -16,7 +16,8 @@ automation does to a conversation.
 
 | file | what it is |
 |---|---|
-| [`the_cozy_web.md`](the_cozy_web.md) | The essay. Cited inline. Written to be publishable on dev.to. |
+| [`the_cozy_web.md`](the_cozy_web.md) | The essay (GitHub-rendered version, relative image paths). Cited inline. |
+| [`devto.md`](devto.md) | The same essay, **ready to paste into dev.to** — front matter, tags, and absolute image/code URLs. Borderline real-named handles are anonymized for the public version. |
 | [`analyze_devto.py`](analyze_devto.py) | Pull a real dev.to thread via the API; score it with the v1 detector (watch it fail) and compute v2 "eco-astroturf" signals (product plugs, validation-openers, throwaway usernames). |
 | [`sweep_devto.py`](sweep_devto.py) | Cross-post sweep: is the eco-comment template platform-wide? Pulls ~38 articles, finds accounts spraying it across dozens of threads + 4-grams reused across distinct accounts. |
 | [`dead_internet_sim.py`](dead_internet_sim.py) | Agent-based sim: sweep "community autonomy" 0→1, watch a thread's *liveness* collapse. Finds a knee ≈ 0.65; disagreement dies first. |
