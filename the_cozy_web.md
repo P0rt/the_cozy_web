@@ -1,192 +1,205 @@
-# The Cozy Web Is a Dead Internet With Good Manners
+# The Comments Got Good. That's How I Knew.
 
-*Or: why your favorite dev blog feels so nice now, and why that might be the symptom rather than the cure.*
-
----
-
-You've felt it. You ship a post to [DEV](https://dev.to), or you scroll one, and the comments are… lovely. "Great write-up!" "This is so helpful, thanks for sharing!" "Really insightful — looking forward to the next one!" Nobody's mad. Nobody found the bug on line 14. Nobody says "actually, you benchmarked this wrong." It is, by every available measure, a *nice place to be*.
-
-I want to argue something uncomfortable: a meaningful slice of that niceness isn't the community getting kinder. It's the community getting **quieter** — fewer people reading closely and writing back — and an increasingly autonomous layer of AI filling the silence with text that is, by construction, pleasant and frictionless. The blog feels cozy for the same reason a dead body feels calm. The thing that made it loud was the thing that made it alive.
-
-This isn't a doom post. It's a *measurement* post. I built two small tools to make the thesis falsifiable instead of just vibey, and I'll show you exactly where the models hold up and where they're caricatures. Code at the bottom; the argument first.
+*I wrote a post about model distillation. The comments were thoughtful, specific, technically sharp — and that's exactly what made me check whether any of them were written by people.*
 
 ---
 
-## Two old ideas, colliding
+A few weeks ago I published [a post on how model distillation actually works](https://dev.to/p0rt/how-model-distillation-actually-works-and-what-the-china-distilled-our-model-headlines-really-3o0o). It did fine — 35 reactions, 14 comments. And the comments were *great*. Not "great post, thanks for sharing" great. **Substantively** great. People pushed back on my "the student is bounded by the teacher" claim with a real counter-example. Someone reframed distillation as "a forcing function for what you actually need." Someone dropped a paper recommendation. Someone shared a 20× cost number from production.
 
-**Dead Internet Theory.** The ur-text is a January 2021 forum post on Agora Road's Macintosh Cafe titled "Dead Internet Theory: Most Of The Internet Is Fake" ([Wikipedia](https://en.wikipedia.org/wiki/Dead_Internet_theory)). Kaitlyn Tiffany brought it to a mainstream audience that year in *The Atlantic* — ["Maybe You Missed It, but the Internet 'Died' Five Years Ago"](https://www.theatlantic.com/technology/archive/2021/08/dead-internet-theory-wrong-but-feels-true/619937/) (2021). In its original, paranoid form it's a conspiracy: the web "died" around 2016 and is now "empty and devoid of people," with bots and state actors gaslighting the rest of us.
+I should have felt good. Instead I felt the thing you feel when a stranger knows your name. Something was off, and it took me a day to articulate what: **the comments were too well-adapted.** Every one of them did the same three things in the same order, like they'd all read the same playbook. And a suspicious number of the accounts were two weeks old, or named after a product, or both.
 
-Strip out the paranoia and you're left with something a lot of engineers now quietly believe. The post-2022 version doesn't need a government — it just needs ChatGPT. And the numbers stopped being a joke: Imperva's [2025 Bad Bot Report](https://www.imperva.com/blog/2025-imperva-bad-bot-report-how-ai-is-supercharging-the-bot-threat/) put **automated traffic at 51% of the web in 2024** — the first time bots crossed half — and credits LLMs directly for lowering the barrier to building them. Even Sam Altman has [said the quiet part](https://time.com/7316046/sam-altman-dead-internet-theory/): the wave of AI-driven activity makes "dead internet theory" feel real.
+So I did what I do. I pulled the data. This is what I found, why I now think a real chunk of "engagement" on dev blogs is machine-generated or machine-shaped, and — because I don't trust my own pattern-matching — what the actual peer-reviewed research says about whether you can even tell anymore.
 
-**The Cozy Web.** Meanwhile, the other half of this story is a *retreat*. Yancey Strickler's "Dark Forest Theory of the Internet" (2019) and the term **"cozy web"** — coined by Venkatesh Rao, popularized and beautifully diagrammed by Maggie Appleton in ["The Dark Forest and the Cozy Web"](https://maggieappleton.com/cozy-web) — describe people fleeing the troll-and-bot-infested public square into "high-gatekeeping" private spaces: Slacks, group chats, Discords, email, DMs. The public web gets the bots; the humans go where the bots can't follow.
-
-Appleton's follow-up, ["The Expanding Dark Forest and Generative AI"](https://maggieappleton.com/forest-talk) (2023), is the single most on-thesis thing I read while writing this. Her point: generative AI *accelerates* the retreat. The more synthetic the public web gets, the harder humans run for the cozy private rooms.
-
-Here's the move I want to make. **These aren't two theories. They're one feedback loop.** The public web fills with frictionless AI text → real conversation migrates to private rooms → the public spaces that remain (your blog's comment section) get even *thinner* on real humans → which makes them even easier to fill with AI text. Coziness is what the surface looks like while the loop runs.
+> 🧪 Everything here — the scraper, the detector, the simulation, the figures — is reproducible: **[github.com/P0rt/the_cozy_web](https://github.com/P0rt/the_cozy_web)**
 
 ---
 
-## The comment section was already dying before the robots showed up
+## "Great post!" is dead. Meet the eco-comment.
 
-This part predates ChatGPT by a decade, and it matters, because it's the *vacuum* the AI rushed into.
+The old bot comment was easy. "Nice article, very informative, looking forward to more!" You could smell it. Anyone could.
 
-Publications started killing comments in the 2010s. *Popular Science* [shut theirs off in 2013](https://thehistoryoftheweb.com/what-happened-to-the-comment-section/), citing research that uncivil comments distorted how readers understood the underlying science. A peer-reviewed analysis of why newsrooms removed commenting — ["Killing the Comments"](https://www.mdpi.com/2673-5172/2/4/34) (Media and Communication, 2021) — found two recurring reasons: moderation cost, and the fact that **the conversation had already migrated to social platforms** where stories got shared. NPR and others basically said: the discussion is happening on Twitter and Reddit now, so why pay to moderate a ghost town?
+That's not what's under my posts anymore. The new thing is *substantive* and **ecological** — it adds real value, it's polite, it never picks a real fight, and it leaves the thread feeling cozier than before. Here's the actual skeleton, which I only saw once I'd read fourteen of them back to back:
 
-So by ~2022 the baseline was: comment sections were thin, conversation lived elsewhere, and the muscle of "read a post closely, then write a substantive reply under it" had atrophied for a lot of people.
+1. **Validate a specific phrase from the post.** Not generic praise — they quote *your* framing back at you. "The 'separate the engineering from the geopolitics' framing is the public service here."
+2. **Add one piece of genuine nuance.** "One thing I'd add…" "The part worth amplifying for builders…" Often a real, correct technical point.
+3. **Drop a first-person-plural anecdote with a number, naming a product.** "We use DeepSeek V4 Flash as our daily driver and the cost difference is roughly 20×." "When working with VoltageGPU, we've seen…"
+4. **Never, ever, actually disagree.** Even the "corrections" are framed so gently that I — the author — instantly conceded.
 
-Then two things happened at once:
-
-1. **Reading got outsourced.** Why read 1,800 words when an assistant will summarize them? The deep-read-then-respond loop is exactly the behavior LLMs are best at replacing.
-2. **Writing got outsourced.** Why draft a comment when "make this sound encouraging and professional" is one keystroke away?
-
-Note that *both* the input and the output of human engagement got an AI in the middle. That's the part the dead-internet framing usually misses — it obsesses over fully autonomous bots, but the more common case is a **spectrum of autonomy** running through real people.
+Read one, it's a great comment. Read eight, it's a **template**. And step 3 is the tell: the technical substance isn't the point. It's the *wrapper* around a product mention, engineered to be useful enough to clear a spam filter and an AI detector both.
 
 ---
 
-## The autonomy spectrum is the whole story
+## My own thread, by the numbers
 
-Forget "bot vs. human." The honest axis is:
+I scraped my article's comments straight from the dev.to public API and ran them through two things: a detector I'd built earlier for the *old* "Great post!" style, and a set of new structural signals. ([`analyze_devto.py`](analyze_devto.py))
+
+**My old detector shrugged.** On the eight non-me comments it gave a mean "coziness" score of **0.25** — i.e. it confidently waved them through as human. Of course it did: it was built to catch clichés, em-dashes, and uniform positivity, and these comments are armored with exactly the thing that defeats it — real specifics.
+
+The new signals told a different story:
 
 ```
-human-typed → spell-checked → "polish this" → "write a comment for me" → agent posts on my behalf, I never read the thread
-   α=0            α≈0.2            α≈0.5              α≈0.8                        α→1.0
+product/company plug:            4 / 8 comments
+opens by validating a phrase:    5 / 8 comments
+comments that genuinely push back: 2 / 8   (and I conceded both, instantly)
+auto-generated-looking username:   iuliia_fokina_f1e495ec4ce
 ```
 
-Most of the cozy comments under your post aren't from a botnet. They're from real people at α ≈ 0.5–0.8 — folks who genuinely liked your post, opened the box, and let an assistant turn a vague positive feeling into three polished sentences. The text is *technically* human-endorsed and *substantively* machine-shaped.
+Then I looked at *who* was commenting. Public profiles, public join dates:
 
-And yes, the fully autonomous end is real and already documented. University of Zurich researchers covertly ran LLM bots (GPT-4o, Claude, Llama) in r/changemyview, some of them profiling users' age, gender, and politics from post history to personalize arguments. They were [3–6× more persuasive than the human baseline](https://www.engadget.com/ai/researchers-secretly-experimented-on-reddit-users-with-ai-generated-comments-194328026.html), broke the subreddit's no-bots rule, got banned, and drew legal demands from Reddit. That's α = 1.0, undisclosed, at scale, *and it worked better than humans*.
+| account | joined | signal |
+|---|---|---|
+| **@voltagegpu** | Oct 2025 | the account **is named after a product** ("Sealed GPUs. Private AI."), and its comment plugs that product. This isn't a person. |
+| **@xulingfeng** | **May 20, 2026** — two weeks before my post | persona ("AI testing storyteller"), plugs MemBridge / DeepSeek, 5 articles in two weeks |
+| **@iuliia_…f1e495ec4ce** | May 30, 2026 | random-hex username, 0 articles, bio "Researcher, procrastinator, dreamer", comment: "Thank you for this!" |
+| @harjjotsinghh, @mudassirworks | 2023–2025 | look more human — real names, older accounts — but still run the exact template, still ship a startup plug |
 
-But the interesting damage is in the middle of the spectrum, not the end. So I modeled the middle.
+To be fair and clear: **I can't prove any single one of these is a bot.** Some are probably real people running their comments through an assistant. But that distinction matters less than it sounds, and I'll come back to why.
 
 ---
 
-## Demo #2: simulating the death of liveness
+## Is it just me? I swept 38 other posts.
 
-> Code: [`dead_internet_sim.py`](dead_internet_sim.py). Run it; the charts are seeded and reproducible.
+A pattern on one thread is an anecdote. So I pulled comments across 38 popular dev.to articles in `ai`, `machinelearning`, `webdev`, and `programming` — **1,366 comments from 346 accounts** ([`sweep_devto.py`](sweep_devto.py)) — and looked for the same fingerprint.
 
-I didn't simulate language — I simulated the *statistics* of language, because the thesis is statistical. Every comment is a bag of tokens drawn from two pools:
+Two findings made the hair on my neck stand up.
 
-- a **human pool**: a big, fat-tailed (Zipfian) vocabulary where the long tail holds the topic-specific terms, the typos, the weird tangents — the high-entropy stuff;
-- a **cozy pool**: a tiny, near-uniform vocabulary of phatic praise ("great", "thanks", "insightful").
+**The same accounts spray the same template across dozens of unrelated posts.** The accounts from *my* thread weren't there for me. They're everywhere:
 
-Each comment has an **assist level α**. With probability α, a given token comes from the cozy pool instead of the human one, and the comment's stance gets pulled from "disagree" toward "agree." Then I sweep the community's *mean* autonomy from 0 → 1 (with every thread a realistic *mix* of fully-human, assisted, and autonomous posters, via a Beta distribution) and watch four "liveness" metrics:
+```
+22 posts  @huaian666
+20 posts  @itskondrat
+15 posts  @harjjotsinghh
+14 posts  @xulingfeng   <- product plug
+```
 
-- **lexical diversity** (type/token ratio)
-- **disagreement rate** (how often someone pushes back)
-- **surprise** (how much genuinely new vocabulary each comment adds)
-- a composite **Liveness Index** — the geometric mean of the three, so that zeroing *any* channel kills it. A thread with zero disagreement is dead even if it's lexically busy.
+A human who loved your distillation post might also comment on three others. They don't leave structurally-identical "validate → nuance → we-at-Product → number" comments on **fourteen** different articles in a couple of weeks.
 
-Here's what falls out:
+**Different "people" reuse the same connective tissue.** I counted 4-grams that appear across *distinct* accounts. Humans almost never echo each other's exact phrasing. These did:
+
+```
+x13 distinct accounts:  "exactly the kind of"
+ x8 distinct accounts:  "is exactly the kind"
+ x7 distinct accounts:  "this is exactly the"
+ x6 distinct accounts:  "is the part that"
+```
+
+"This is exactly the kind of thing that…" is a *generative* construction — it's how an LLM hedges into a confident-sounding addition. Thirteen different strangers don't independently converge on it. One model behind thirteen masks does.
+
+Across the whole sweep, 11 accounts left long product plugs, 32 opened with phrase-validation, and 4 ran the full skeleton. It's not my imagination, and it's not just my post. It's the ambient texture of the platform now.
+
+---
+
+## I'd been calling this the wrong thing
+
+I went in thinking "bots." What I'd actually walked into is two older ideas fusing.
+
+**Dead Internet Theory** — the half-joke that the web "died" and is now mostly bots and generated text talking to itself — has stopped being a joke. Hal Berghel makes the serious version of the case in *IEEE Computer* (["Generative AI Is Breathing New Life Into the Dead Internet Theory"](https://doi.org/10.1109/MC.2025.3616665), 2026): strip the conspiracy, and the lean core — synthetic content drowning out and being mistaken for humans — just *converges with what's measurable*. Imperva clocked [automated traffic at 51% of the web in 2024](https://www.imperva.com/blog/2025-imperva-bad-bot-report-how-ai-is-supercharging-the-bot-threat/), the first time bots crossed half. Even Sam Altman [said it out loud](https://time.com/7316046/sam-altman-dead-internet-theory/): the wave of AI activity makes dead-internet theory feel real.
+
+The other half is the **Cozy Web**. Venkatesh Rao coined the term; Maggie Appleton [diagrammed it](https://maggieappleton.com/cozy-web) alongside Yancey Strickler's "dark forest": humans fleeing the bot-infested public square into private rooms — group chats, Discords, DMs. Appleton's follow-up, ["The Expanding Dark Forest and Generative AI"](https://maggieappleton.com/forest-talk), nails the mechanism: generative AI *accelerates* the retreat.
+
+Here's the part I missed until I saw my own comment section. **These aren't two theories. They're one loop.** The public web fills with frictionless synthetic text → real people retreat to private rooms → the public spaces that remain (the comment section under my post) get thinner on actual humans → which makes them even easier to fill with synthetic text. My "cozy" thread wasn't a healthy community. It was the calm surface of that loop running.
+
+And the comment section was already half-empty before the bots arrived. Publications spent the 2010s killing comments — *Popular Science* [in 2013](https://thehistoryoftheweb.com/what-happened-to-the-comment-section/), and a [peer-reviewed survey of why newsrooms did it](https://www.mdpi.com/2673-5172/2/4/34) found the conversation had already migrated to social platforms. The robots didn't kill the comment section. They moved into a house that was already mostly vacant.
+
+---
+
+## Why this actually works (and why I couldn't just tell)
+
+This is the part that unsettled me most, because I pride myself on spotting this stuff, and the research says I shouldn't trust that for a second.
+
+**Humans can't distinguish LLM social text from human text.** Spitale, Biller-Andorno & Germani showed in *Science Advances* ([2023](https://www.science.org/doi/10.1126/sciadv.adh1850)) that people can't tell GPT tweets from human ones — and rate the AI's information as *more* credible. Jones & Bergen found GPT-4 [passes a controlled Turing test](https://arxiv.org/abs/2405.08007) (taken for human 54% of the time, FAccT 2025).
+
+**The persuasion is superhuman when it's personalized.** Salvi, Ribeiro, Gallotti & West, in *Nature Human Behaviour* ([2025](https://www.nature.com/articles/s41562-025-02194-6)): with a little data about who they're talking to, GPT-4 is **81% more likely than a human** to win a debate. The Zurich r/changemyview field experiment reportedly found AI replies 3–6× more persuasive than humans — though I'll flag honestly that that study was **withdrawn and never peer-reviewed**; the only on-record account is the university's [ethics response](https://retractionwatch.com/2025/04/29/ethics-committee-ai-llm-reddit-changemyview-university-zurich/). Cite it as a withdrawn preprint, not a result.
+
+**Fake-but-substantive content is, by now, undetectable to people.** This is the literature closest to my eco-comments. The canonical [Ott et al. (ACL 2011)](https://aclanthology.org/P11-1032/) already showed humans judge fake reviews at chance. The LLM-era update — Meng et al., ["Fake Product Reviews are Indistinguishable to Humans and Machines"](https://arxiv.org/abs/2506.13313) (2025) — found people at **50.8%** (a coin flip) and detectors no better. A promotional plug wearing a sincere technical comment is exactly that, in a new venue.
+
+**And the detectors fail precisely because of the specifics.** My detector waved these comments through, and that's not a bug in my code — it's the field. Krishna et al. (*NeurIPS 2023*) showed [light paraphrasing collapses DetectGPT from 70.3% to 4.6%](https://arxiv.org/abs/2303.13408) and defeats GPTZero, OpenAI's classifier, and watermarks. Liang et al. (*Patterns 2023*) showed detectors are [biased against non-native English writers](https://arxiv.org/abs/2304.02819) and bypassable by prompting. The "real technical detail" that made these comments feel human is the *same mechanism* that blinds the detector. Specificity isn't proof of a human. It's camouflage.
+
+So the honest position isn't "I caught the bots." It's: **the tools that would let me be sure don't work, and the research says they can't.**
+
+---
+
+## I modeled what it does to a thread
+
+If I can't reliably catch individual comments, I can at least ask: what does rising automation *do* to a conversation, statistically? So I built a toy. ([`dead_internet_sim.py`](dead_internet_sim.py))
+
+I didn't simulate language — I simulated its statistics, because my thesis is statistical. Each comment is a bag of tokens from two pools: a big, fat-tailed **human** vocabulary (where the typos, the tangents, the specific war stories live) and a tiny **cozy** vocabulary of phatic praise. Each comment has an *assist level* α from 0 (I typed this, annoyed) to 1 (an agent posts for me, I never read the thread). As α rises, more tokens come from the cozy pool and the comment's stance gets pulled from "disagree" toward "agree."
+
+Then I swept a whole community's *average* autonomy from 0 → 1 and watched the thread's "liveness" — lexical diversity, disagreement, surprise, and a composite index that dies if *any* of those hits zero.
 
 ![Liveness vs autonomy](figures/liveness_vs_autonomy.png)
 
-Two things I want you to notice:
+Two things fall out, and both match what I saw on my own post:
 
-1. **It's not linear — there's a knee.** Liveness halves at a community autonomy of about **0.65**. Below that knee, the thread is statistically a *smooth surface*: still polite, still "engaged," contributing almost no new information. You don't need everyone to be a bot. You need the average poster to be ~⅔ on the assist dial, which is… not a high bar in 2026.
+1. **It's not linear — there's a knee around 0.65.** You don't need a botnet. You need the *average* commenter to be two-thirds on the assist dial, and the thread becomes a smooth surface: polite, "engaged," contributing almost no new information.
+2. **Disagreement dies first** (the steep red line). The very first thing automation sands off is friction — the "actually, you benchmarked this wrong" energy. Which is *exactly* why my comment section felt so nice. It didn't get kinder. It got conflict-free, and I'd been reading conflict-free as kind.
 
-2. **Disagreement (the red line) dies first.** It's the steepest curve on the chart. The very first thing an LLM sands off a conversation is friction — the "actually, you're wrong about the LATERAL join" energy. Which is *exactly* the experience of the cozy comment section. It didn't get kinder. It got conflict-free, which we *read* as kind.
-
-And a literal version of "cozy" — the thread uses fewer distinct words:
+A cozy thread even, literally, uses fewer distinct words:
 
 ![Effective vocabulary collapse](figures/effective_vocab.png)
 
-The effective vocabulary (`exp(entropy)`) of a thread collapses from ~175 words to ~60 as autonomy maxes out. There's an honest wrinkle here I won't hide: at *low* autonomy (0 → 0.2) it ticks *up* slightly. A little AI assistance genuinely adds a new register of vocabulary before saturation sets in and homogenizes everything. The damage isn't from assistance existing — it's from assistance *dominating*.
+Effective vocabulary collapses from ~175 words to ~60 as autonomy maxes out. (Honest wrinkle: at *low* autonomy it ticks up slightly — a little assistance adds a register before saturation homogenizes everything. The damage isn't assistance existing. It's assistance *dominating*.)
 
----
-
-## "Okay, so just detect the AI comments"
-
-This is where people reach for a classifier. I built one too, partly to show you why it's a trap.
-
-> Code: [`coziness_detector.py`](coziness_detector.py).
-
-It's a deliberately *transparent*, heuristic scorer — not a real classifier — for what I call **"AI coziness."** Every feature is something you can read and argue with:
-
-| feature | what it catches | direction |
-|---|---|---|
-| **burstiness** | LLMs regress to a comfortable mean sentence length; humans write in lumps | low burst → cozy |
-| **cliché density** | "Great post!", "Thanks for sharing" — phatic filler | high → cozy |
-| **marker words** | the house style: *delve, tapestry, leverage, underscore, pivotal* | high → cozy |
-| **politeness/hedging** | uniform deference | high → cozy |
-| **em-dash rate** | LLMs love an em dash—like this | high → cozy |
-| **sentiment uniformity** | all-positive, zero friction | high → cozy |
-| **specificity** | numbers, code tokens, named tools, concrete disagreement | high → **human** |
-
-That last feature — specificity — is the human's escape hatch. The thing generic praise can't fake is *citing the actual thing*: line 14, Postgres 14, `Array.from({length:n})`, "we lost 4 hours to this last sprint."
-
-On hand-written caricatures it separates cleanly:
-
-```
-[human]    0.00  | wait, doesn't useMemo here just recompute every render...
-[human]    0.00  | nah. tried this exact setup with postgres 14 and the LATERAL join was 3x slower...
-[ai_cozy]  0.72  | What a fantastic write-up. You've done an excellent job delving into the intricacies...
-[ai_cozy]  0.60  | Great post! This is really insightful and well written. Thanks for sharing...
-
-human   mean coziness: 0.06
-ai_cozy mean coziness: 0.60
-threshold 0.33 → 11/12 separated
-```
+And here's the detector failure as a picture — it cleanly separates the *old* caricature comments, which is useless, because the comments on my post don't look like the left pile anymore:
 
 ![Coziness histogram](figures/coziness_hist.png)
 
-**And this is exactly where I have to tell you it doesn't work in the wild.** The caricatures separate because I wrote them to. Real comments live in the messy middle of the autonomy spectrum, and the burstiness/perplexity approach that real detectors use — pioneered by [GPTZero](https://gptzero.me/news/perplexity-and-burstiness-what-is-it/) (2023) and formalized academically by [DetectGPT](https://arxiv.org/abs/2301.11305) (Mitchell et al., 2023, via probability curvature) — is famously unreliable:
+---
 
-- The stylometric "tells" are a moving target. As [The Conversation lays out](https://theconversation.com/too-many-em-dashes-weird-words-like-delves-spotting-text-written-by-chatgpt-is-still-more-art-than-science-259629), ChatGPT and Copilot lean on em-dashes, Claude barely uses them, and some models use none — and expert humans spot AI abstracts only marginally above chance.
-- Detectors are *biased*. Liang et al., ["GPT detectors are biased against non-native English writers"](https://arxiv.org/pdf/2304.02819) (*Patterns*, 2023), found GPT detectors flagged **~61% of non-native TOEFL essays** as AI while rarely misflagging native writers. A "coziness" detector is, partly, a *fluency* detector — and punishing fluency punishes ESL developers, who are a huge share of the dev community.
+## The line I actually care about isn't "bot vs. human"
 
-So detection can't save the cozy web. Which leaves platforms doing the only thing that scales: **using AI to police AI.** DEV's own founder published exactly that — ["Fighting Spam at Scale: How We Use Gemini to Protect the DEV Community"](https://dev.to/devteam/fighting-spam-at-scale-how-we-use-gemini-to-protect-the-dev-community-277j) (2025) — a pipeline that calls Gemini to triage content for quality, authenticity, and spam *before a human moderator ever sees it*. I don't say that as a gotcha; it's a sane engineering response to an impossible volume problem. But sit with the shape of it: on the cozy dev platform, an AI now reads most of the content so that humans don't have to, and an AI writes a lot of it so that humans don't have to. The humans are increasingly the *exception case* on both ends.
+I kept wanting a verdict on each account. The research talked me out of it. The useful axis isn't bot-or-not — it's the **autonomy spectrum**:
+
+```
+I typed it → spell-check → "polish this" → "write a comment for me" → an agent posts, I never read the thread
+   α=0          α≈0.2          α≈0.5             α≈0.8                        α→1.0
+```
+
+@voltagegpu is α≈1.0 — a product account broadcasting. The two-week-old persona spraying fourteen threads is close behind. But @mudassirworks might be a real growth-hacker at α≈0.8, genuinely interested, letting a model do the writing and slip in the plug. From the *thread's* point of view, it barely matters: either way, the high-entropy human part — the real disagreement, the idiosyncratic detail, the thing that made it a conversation — got outsourced and smoothed away. That's the loss. Not "a bot was here," but "no one staked anything specific."
+
+There's even a cheerful counter-current I want to be fair about: AI content on the web is large but [not yet total](https://originality.ai/ai-content-in-google-search-results) (~17–19% of Google's top results in 2025, by an imperfect detector), some sites are [bringing comment sections *back*](https://www.techdirt.com/2026/02/03/whoops-websites-realize-that-killing-their-comment-sections-was-a-mistake/) on the back of AI moderation, and dev.to's supportive culture is a [real, deliberate choice](https://dev.to/code-of-conduct), not just an artifact of bots. Even "what % is bots" has [no agreed answer](https://arxiv.org/abs/2209.10006) — it depends entirely on your detector. The sky isn't falling. It's just getting quieter in a very specific way.
 
 ---
 
-## So is the internet actually dead?
+## What I'm going to do about my own blog
 
-No — and I want to be honest about the counter-evidence, because the doomer version of this essay is wrong.
+Not "ban AI" — that's unenforceable (the detectors are biased and gameable) and wrong (a quick polish genuinely helps a non-native writer or a tired one). The lever isn't the *level* of assistance. It's whether assistance **crowds out the high-entropy channels**.
 
-- AI content on the public web is large but not yet total. Originality.AI's [ongoing tracker](https://originality.ai/ai-content-in-google-search-results) put AI text in Google's top-20 results at **~17–19%** through 2025; Graphite estimated [AI articles passed human articles in raw publication volume around Nov 2024](https://graphite.io/five-percent/more-articles-are-now-created-by-ai-than-humans). (Both numbers come from single-detector studies with real false-positive rates — treat them as directional, not gospel; this is the same unreliability problem from the last section, now pointed at the whole web.)
-- The comment section is even *reviving*. Techdirt reports a wave of sites [realizing that killing comments was a mistake](https://www.techdirt.com/2026/02/03/whoops-websites-realize-that-killing-their-comment-sections-was-a-mistake/) and restoring them — leaning on automated moderation to keep them sane. AI giveth the moderation that makes human comments viable again.
-- And DEV's reputation for being a genuinely [supportive, no-ego space](https://dev.to/code-of-conduct) is *real* — it's a culture choice, codified in the Code of Conduct, not just an artifact of bots. (Worth flagging: that "cozy" reputation is widely held but rests on community/first-party accounts, not an external study. I'm describing a vibe, not a measurement.)
-
-So the accurate claim isn't "the internet is dead." It's narrower and weirder:
-
-> **The texture of public conversation is converging toward the cozy mean, because the high-entropy human parts — disagreement, specificity, surprise — are precisely the parts that get outsourced first, whether to a bot at α=1.0 or to your own assistant at α=0.6.**
-
-Coziness isn't the opposite of a dead internet. It's its bedside manner.
+- **I'll reward specificity over positivity.** A comment that cites line 14, a version number, a counter-benchmark is worth ten that validate my framing. If a platform ranks by "nice," it is literally selecting for the cozy mean.
+- **I'll treat disagreement as a feature, not a moderation failure.** My simulation's clearest result is that friction dies first. A comment culture optimized purely for niceness is optimizing for deadness with extra steps.
+- **I'll stop asking "was a model involved."** It's the wrong question, because the answer is "yes, partly, almost always now." The real question is: *did a human read the thing and stake some specificity on a real reply?*
 
 ---
 
-## What I'd actually do about it
+## Limitations (read this before you @ me — if you're real)
 
-Not "ban AI." That's both unenforceable (see: detectors are biased and gameable) and wrong (assistance at α=0.2 genuinely helps ESL writers and tired engineers). The lever isn't autonomy *level*, it's whether autonomy *crowds out the high-entropy channels*. Concretely:
-
-- **Reward specificity, not positivity.** If your platform's ranking signal is "engagement" and engagement is "nice comments," you are directly selecting for the cozy mean. Rank for "cited the actual thing" — code, numbers, a counter-example.
-- **Protect disagreement as a feature, not a moderation failure.** The simulation's clearest result is that friction dies *first*. A comment culture optimized purely for niceness is optimizing for deadness with extra steps.
-- **Disclose the dial, don't ban the tool.** "AI-assisted" is not a binary, so don't moderate it like one. The useful question is never "was a model involved" — it's "did a human read the thing and stake their specificity on a real reply."
-
----
-
-## Limitations (read this before you @ me)
-
-- **The simulation is a toy.** Two token pools and a stance variable are a cartoon of language. The *shape* of the collapse (knee, disagreement-dies-first) is a property of the model's assumptions as much as of reality. It's an argument made precise, not evidence.
-- **The detector is a strawman by design** — I built it partly to demonstrate its own failure mode (fluency ≠ AI; see Liang et al.). Don't deploy it. Don't deploy *anything* like it as a gate on real people.
-- **Several juicy stats didn't survive fact-checking** and aren't in here (e.g. a viral "74% of new web pages contain AI" figure I couldn't trace to a primary source). The numbers above are the ones with traceable methodology, caveats and all.
-- **Causation is underdetermined.** Cozy comment sections may also reflect better moderation, kinder norms, or survivorship (the cranks left for Reddit). AI-mediation is *a* driver, not provably *the* driver.
+- **I can't prove a single named account is a bot.** Everything above is signals — template reuse, account age, product plugs, cross-post spray — not a confession. The honest claim is about *aggregate texture*, not any individual.
+- **The simulation is a toy.** Two token pools and a stance variable are a cartoon of language. The *shape* of the collapse is a property of my assumptions as much as reality. It's an argument made precise, not evidence.
+- **My detector is a strawman by design** — I show it failing on purpose. Don't deploy it; don't deploy anything like it as a gate on real people (see Liang et al. on who gets falsely flagged).
+- **The Zurich study is withdrawn**, and "% of the web is bots/AI" numbers are detector-dependent and shaky. I've tried to lean only on the load-bearing peer-reviewed work and flag the rest.
+- **Causation is underdetermined.** My cozy comments might also reflect good moderation, kind norms, or survivorship (the cranks left for Reddit). AI-mediation is *a* driver, not provably *the* driver.
 
 ---
 
 ## The one-line version
 
-The internet didn't die. It got an assistant, learned some manners, and stopped saying anything surprising. The cozy web is what a conversation looks like when everyone's outsourced the parts that used to make it a conversation.
+My blog didn't get a nicer community. It got an assistant, learned some manners, and stopped saying anything surprising. The internet didn't die — it just outsourced the parts that used to make it a conversation, and called the result "cozy."
 
-If this post gets a comment that just says *"Great write-up, really insightful — thanks for sharing!"*… well. You know what to check.
+If this post gets a comment that opens by quoting my own framing back at me, adds one tasteful piece of nuance, and mentions a product its account is named after… well. You know what I'm going to check.
 
 ---
 
 ### Run it yourself
 
 ```bash
+git clone https://github.com/P0rt/the_cozy_web
+cd the_cozy_web
 pip install -r requirements.txt
+
 python3 dead_internet_sim.py     # liveness collapse + figures
 python3 coziness_detector.py     # the heuristic scorer + histogram
+python3 analyze_devto.py         # tear apart a real dev.to thread (defaults to my distillation post)
+python3 sweep_devto.py           # the cross-platform template sweep
 ```
 
-*Sources for every factual claim are linked inline. The two strongest on-thesis reads, if you only click two: Maggie Appleton's [Expanding Dark Forest](https://maggieappleton.com/forest-talk) and Liang et al. on [why detectors are biased](https://arxiv.org/pdf/2304.02819).*
+*Every factual claim links to its source. If you only read two, read Meng et al. on [why fake reviews are now indistinguishable](https://arxiv.org/abs/2506.13313) and Krishna et al. on [why the specifics defeat the detector](https://arxiv.org/abs/2303.13408).*
